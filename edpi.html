@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>VALORANT eDPI 계산기</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .sub {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    #grade {
+      margin-top: 6px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>VALORANT eDPI</h1>
+
+    <input id="dpi" type="number" placeholder="DPI (예: 800)">
+    <input id="sens" type="number" step="0.01" placeholder="감도 (예: 0.35)">
+
+    <button onclick="calc()">계산</button>
+    <button onclick="save()">내 감도 저장</button>
+    <button onclick="load()">저장된 감도 불러오기</button>
+
+    <div id="result"></div>
+    <div id="grade"></div>
+
+    <div class="sub">※ 감도는 이 기기 브라우저에 저장됩니다</div>
+  </div>
+
+  <script>
+    function calc() {
+      const dpi = document.getElementById("dpi").value;
+      const sens = document.getElementById("sens").value;
+      const result = document.getElementById("result");
+      const grade = document.getElementById("grade");
+
+      if (!dpi || !sens) {
+        result.innerText = "값을 입력하세요";
+        grade.innerText = "";
+        return;
+      }
+
+      const edpi = dpi * sens;
+      result.innerText = "eDPI: " + edpi.toFixed(1);
+
+      if (edpi < 250) {
+        grade.innerText = "구간: 낮음 (Low Sens)";
+      } else if (edpi < 350) {
+        grade.innerText = "구간: 보통 (Mid Sens)";
+      } else {
+        grade.innerText = "구간: 높음 (High Sens)";
+      }
+    }
+
+    function save() {
+      const dpi = document.getElementById("dpi").value;
+      const sens = document.getElementById("sens").value;
+
+      if (!dpi || !sens) {
+        alert("저장할 값을 입력하세요");
+        return;
+      }
+
+      localStorage.setItem("dpi", dpi);
+      localStorage.setItem("sens", sens);
+      alert("감도가 저장되었습니다");
+    }
+
+    function load() {
+      const dpi = localStorage.getItem("dpi");
+      const sens = localStorage.getItem("sens");
+
+      if (!dpi || !sens) {
+        alert("저장된 감도가 없습니다");
+        return;
+      }
+
+      document.getElementById("dpi").value = dpi;
+      document.getElementById("sens").value = sens;
+      calc();
+    }
+  </script>
+
+</body>
+</html>
